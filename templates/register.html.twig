@@ -7,8 +7,8 @@
     <div class="page-header jumbotron text-center" id="banner" >
                 <h1>S'inscrire sur le site</h1>
                 {{ form_start(formUser) }}
-
                 <div class="form-group">
+
 
                     {{ form_row(formUser.pseudo, {
                         'attr' : {'placeholder' : "Mon pseudo", 'class' : 'form-control'}
@@ -21,7 +21,6 @@
                     }) }}
 
                     <button type="submit" class="btn btn-primary">S'inscrire</button>
-
                 {{ form_end(formUser) }}
 
         </div>
