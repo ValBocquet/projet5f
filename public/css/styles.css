@@ -1,0 +1,7 @@
+.nav-link {
+    display: inline-block !important;
+}
+.fixed-top {
+    position: sticky;
+    margin-bottom: 20px;
+}
