@@ -2,7 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Users;
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class HomeController extends AbstractController
@@ -18,7 +21,17 @@ class HomeController extends AbstractController
     /**
      * @Route("register", name="register")
      */
-    public function register() {
-        return $this->render('home/register.html.twig');
+    public function register(Request $request, ObjectManager $manager) {
+        $user = new Users();
+
+        $form = $this->createFormBuilder($user)
+            ->add('pseudo')
+            ->add('password')
+            ->add('email')
+            ->getForm();
+
+        return $this->render('register.html.twig', [
+           'formUser' => $form->createView()
+        ]);
     }
 }

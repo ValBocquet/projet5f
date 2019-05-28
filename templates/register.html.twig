@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+    S'inscrire
+{% endblock %}
+
+{% block body %}
+    <div class="page-header jumbotron text-center" id="banner" >
+                <h1>S'inscrire sur le site</h1>
+                {{ form_start(formUser) }}
+
+                <div class="form-group">
+
+                    {{ form_row(formUser.pseudo, {
+                        'attr' : {'placeholder' : "Mon pseudo", 'class' : 'form-control'}
+                    }) }}
+                    {{ form_row(formUser.password, {
+                        'attr' : {'placeholder' : "Mon mot de passe", 'class' : 'form-control'}
+                    }) }}
+                    {{ form_row(formUser.email, {
+                        'attr' : {'placeholder' : "Mon adresse email", 'class' : 'form-control'}
+                    }) }}
+
+                    <button type="submit" class="btn btn-primary">S'inscrire</button>
+
+                {{ form_end(formUser) }}
+
+        </div>
+    </div>
+{% endblock %}

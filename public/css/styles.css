@@ -5,3 +5,7 @@
     position: sticky;
     margin-bottom: 20px;
 }
+
+button[type="submit"] {
+    margin: 20px  ;
+}
