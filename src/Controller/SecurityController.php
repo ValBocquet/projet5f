@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Datas;
 use App\Entity\Users;
-use App\Form\FileType;
+use App\Form\UploadType;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -65,43 +65,6 @@ class SecurityController extends AbstractController
 
     }
 
-    /**
-     * @Route("upload", name="upload")
-     */
-    public function upload(Request $request) {
-        $file = new Datas();
-        $form = $this->createForm(FileType::class, $file);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            /** @var Symfony\Component\HttpFoundation\File\UploadedFile $file */
-            $file = $file->getNameFile();
-
-            $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
-
-            // Move the file to the directory where brochures are stored
-            try {
-                $file->move(
-                    $this->getParameter('upload_directory'),
-                    $fileName
-                );
-            } catch (FileException $e) {
-                // ... handle exception if something happens during file upload
-            }
-
-            // updates the 'brochure' property to store the PDF file name
-            // instead of its contents
-            $file->setNameFile($fileName);
-
-            // ... persist the $product variable or any other work
-
-            return $this->redirect($this->generateUrl('upload'));
-        }
-
-        return $this->render('product/file.html.twig', [
-            'form' => $form->createView(),
-        ]);
-    }
 
 
 }
