@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    {{ form_start(FileType) }}
+
+    {{ form_row(FileType.file) }}
+    {{ form_end(form) }}
+
+{% endblock %}

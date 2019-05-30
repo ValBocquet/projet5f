@@ -17,7 +17,11 @@
             <div class="page-header">
                 <div class="row">
                     <div class="col-lg-12">
-                        <h1 id="navbars">{{ app.user.username }}</h1>
+                        {% if app.user %}
+                            <h1 id="navbars">{{ app.user.username }}</h1>
+                        {% else %}
+                            <h1 id="navbars">Hello</h1>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -27,7 +31,10 @@
                 <p>Uploadons</p>
                 <div class="dragDrop">
                     <!-- formulaire -->
-
+                    <form action="{{ path('home') }}" method="POST">
+                        <label for="fileUpload"></label><input type="file" name="fileUpload">
+                        <button class="btn btn-primary" name="uploadBtn">Envoyer</button>
+                    </form>
                 </div>
             </div>
             <div class="col-lg-5">
