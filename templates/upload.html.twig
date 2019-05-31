@@ -2,5 +2,10 @@
 
 {% block body %}
 
- <h1>coucou</h1>
+{{ form_start(form) }}
+
+
+ {{ form_row(form) }}
+ {{ form_end(form) }}
+ <button class="btn btn-primary">Envoyer !</button>
 {% endblock %}
