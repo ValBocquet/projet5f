@@ -26,7 +26,7 @@ class uploadType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Datas::class,
             // enable/disable CSRF protection for this form
-            'csrf_protection' => true,
+            'csrf_protection' => false,
             // the name of the hidden HTML field that stores the token
             'csrf_field_name' => '_token',
             // an arbitrary string used to generate the value of the token

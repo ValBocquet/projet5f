@@ -65,11 +65,9 @@ class SecurityController extends AbstractController
         $form = $this->createForm(uploadType::class, $datas);
 
         $form->handleRequest($request);
-        $submittedToken = $request->request->get('_token');
-        dump($submittedToken);
+
        if ($form->isSubmitted() && $form->isValid()) {
 
-           if ($this->isCsrfTokenValid('task_item', $submittedToken)) {
 
                $file = $datas->getNameFile();
                $fileName = md5(uniqid()).'.'.$file->guessExtension();
@@ -80,7 +78,7 @@ class SecurityController extends AbstractController
 
                $datas->setNameFile($fileName);
 
-            }
+               return $this->redirectToRoute('home');
 
        }
 
