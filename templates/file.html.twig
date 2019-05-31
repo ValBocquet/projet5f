@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    {{ form_start(UploadType) }}
+
+    {{ form_row(UploadType.file) }}
+    {{ form_end(UploadType) }}
+
+{% endblock %}

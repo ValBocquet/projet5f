@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -30,7 +32,7 @@ class Users implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\length(min="8", minMessage="Longueur du mot de passe minimum : 8 caractères")
+     * @Assert\Length(min="8", minMessage="Longueur du mot de passe minimum : 8 caractères")
      */
     private $password;
 
@@ -44,6 +46,16 @@ class Users implements UserInterface
      * @ORM\Column(type="datetime")
      */
     private $created_at;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Datas", mappedBy="idUser", orphanRemoval=true)
+     */
+    private $files;
+
+    public function __construct()
+    {
+        $this->files = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -118,5 +130,36 @@ class Users implements UserInterface
     {
         // TODO: Implement getRoles() method.
         return ['ROLE_USER'];
+    }
+
+    /**
+     * @return Collection|Datas[]
+     */
+    public function getFiles(): Collection
+    {
+        return $this->files;
+    }
+
+    public function addFile(Datas $file): self
+    {
+        if (!$this->files->contains($file)) {
+            $this->files[] = $file;
+            $file->setIdUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFile(Datas $file): self
+    {
+        if ($this->files->contains($file)) {
+            $this->files->removeElement($file);
+            // set the owning side to null (unless already changed)
+            if ($file->getIdUser() === $this) {
+                $file->setIdUser(null);
+            }
+        }
+
+        return $this;
     }
 }

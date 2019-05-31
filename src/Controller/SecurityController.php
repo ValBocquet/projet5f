@@ -2,12 +2,15 @@
 
 namespace App\Controller;
 
+use App\Entity\Datas;
 use App\Entity\Users;
+use App\Form\UploadType;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class SecurityController extends AbstractController
@@ -35,7 +38,7 @@ class SecurityController extends AbstractController
             $manager->persist($user);
             $manager->flush();
 
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('login.html.twig');
         }
 
         return $this->render('register.html.twig', [
@@ -61,4 +64,7 @@ class SecurityController extends AbstractController
     {
 
     }
+
+
+
 }
