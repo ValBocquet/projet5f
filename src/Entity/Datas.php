@@ -42,12 +42,12 @@ class Datas
         return $this->id;
     }
 
-    public function getNameFile(): ?string
+    public function getNameFile()
     {
         return $this->nameFile;
     }
 
-    public function setNameFile(string $nameFile): self
+    public function setNameFile($nameFile): self
     {
         $this->nameFile = $nameFile;
 

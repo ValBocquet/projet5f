@@ -3,9 +3,6 @@
 {% block body %}
 
 {{ form_start(form) }}
-
-
- {{ form_row(form) }}
- {{ form_end(form) }}
- <button class="btn btn-primary">Envoyer !</button>
+    {{ form_widget(form) }}
+    {{ form_end(form) }}
 {% endblock %}
