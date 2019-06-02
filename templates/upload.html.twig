@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    {% if app.user %}
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        {{ form_end(form) }}
+    {% else %}
+        <p>Pour pouvoir uploader un fichier, il faut être inscrit. <a href="{{ path('register') }}">Cliquez ici</a></p>
+    {% endif %}
+{% endblock %}

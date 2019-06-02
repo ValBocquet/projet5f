@@ -3,12 +3,20 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\DatasRepository")
  */
 class Datas
 {
+    /**
+     * @Assert\File(
+     *     maxSize = "2M",
+     *     maxSizeMessage = "Votre fichier ({{ size }} {{ suffix }}) dépasse la limite autorisée de {{ limit }} {{ suffix }}."
+     * )
+     */
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -42,12 +50,12 @@ class Datas
         return $this->id;
     }
 
-    public function getNameFile(): ?string
+    public function getNameFile()
     {
         return $this->nameFile;
     }
 
-    public function setNameFile(string $nameFile): self
+    public function setNameFile($nameFile): self
     {
         $this->nameFile = $nameFile;
 

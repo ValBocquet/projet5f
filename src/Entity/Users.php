@@ -52,6 +52,11 @@ class Users implements UserInterface
      */
     private $files;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $avatar;
+
     public function __construct()
     {
         $this->files = new ArrayCollection();
@@ -159,6 +164,18 @@ class Users implements UserInterface
                 $file->setIdUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAvatar()
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar($avatar): self
+    {
+        $this->avatar = $avatar;
 
         return $this;
     }

@@ -35,7 +35,7 @@
                 {% else %}
                 <ul class="nav navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('logout') }}">Déconnexion</a>
+                        <a href="{{ path('user') }}" class="nav-link">{{ app.user.username }}</a>
                     </li>
                 </ul>
 
