@@ -7,9 +7,15 @@
     <div class="page-header jumbotron text-center" id="banner" >
         <h1>Se connecter sur le site</h1>
 
+        {% if error %}
+            <div class="alert alert-danger">
+                {{ error.messageKey | trans(error.messagedata, 'security') }}
+            </div>
+        {% endif %}
+
         <form action="{{ path('login') }}" method="post">
             <div class="form-group">
-                <input type="text" class="form-control" placeholder="Adresse email" required name="_username">
+                <input type="text" class="form-control" placeholder="Adresse email" required name="_username" value="{{ last_username }}">
             </div>
             <div class="form-group">
                 <input type="password" class="form-control" placeholder="Password" required name="_password">
