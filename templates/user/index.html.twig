@@ -15,7 +15,7 @@
 </div>
 
     <h2 class="mt-lg-5">Modifier l'avatar :</h2>
-
+    <img src="upload/{{ app.user.avatar }}" alt="avatar du {{ app.user.username }}">
     {{ form_start(form) }}
     {% if form_errors is defined %}
         <div class="alert alert-danger">
@@ -25,4 +25,19 @@
         {{ form_row(form) }}
         <button class="btn btn-primary">Envoyer</button>
     {{ form_end(form) }}
+
+    <h2 class="mt-lg-5">Modification du mot de passe :</h2>
+
+
+    {{ form_start(formPass) }}
+    <div class="form-group">
+
+
+    {{ form_row(formPass.password.first)}}
+    {{ form_row(formPass.password.second)}}
+
+
+    <button type="submit" class="btn btn-primary">Modifier</button>
+    </div>
+    {{ form_end(formPass) }}
 {% endblock %}
