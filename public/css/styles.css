@@ -41,3 +41,14 @@ a.tab.is-active, a.tab:hover {
     border-right: 1px solid #ececec;
     border-left: 1px solid #ececec;
 }
+
+.arrondir {
+    border-radius: 20px;
+    transition-duration: .15s;
+    border: 2px solid #fff;
+}
+.drop {
+    border: 3px solid black;
+    height: 200px;
+    width: 50%;
+}

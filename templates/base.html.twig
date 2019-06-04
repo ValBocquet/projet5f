@@ -37,7 +37,7 @@
                     <li class="nav-item">
                         <a href="{{ path('user') }}" class="nav-link">
                             {% if app.user.avatar is not null %}
-                                <img src="upload/{{ app.user.avatar }}" alt="avatar de {{ app.user.username }}">
+                                <img src="upload/{{ app.user.avatar }}" alt="avatar de {{ app.user.username }}" class="arrondir">
                             {% else %}
                                 {{ app.user.username }}
                             {% endif %}
