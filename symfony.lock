@@ -1,4 +1,7 @@
 {
+    "99designs/phumbor": {
+        "version": "1.2.2"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -99,8 +102,17 @@
     "fig/link-util": {
         "version": "1.0.0"
     },
+    "gumlet/php-image-resize": {
+        "version": "1.9.2"
+    },
+    "guzzlehttp/psr7": {
+        "version": "1.5.2"
+    },
     "imagine/imagine": {
         "version": "v0.7.1"
+    },
+    "intervention/image": {
+        "version": "2.4.2"
     },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
@@ -142,6 +154,9 @@
     "psr/container": {
         "version": "1.0.0"
     },
+    "psr/http-message": {
+        "version": "1.0.1"
+    },
     "psr/link": {
         "version": "1.0.0"
     },
@@ -150,6 +165,9 @@
     },
     "psr/simple-cache": {
         "version": "1.0.1"
+    },
+    "ralouphie/getallheaders": {
+        "version": "2.0.5"
     },
     "sensio/framework-extra-bundle": {
         "version": "5.2",

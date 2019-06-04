@@ -14,15 +14,9 @@
    <p class="mt-lg-5">Dans cet espace, tu vas pouvoir mettre à jour ton profil facilement et rapidement.</p>
 </div>
 
-<<<<<<< HEAD
     <h2 class="mt-lg-5">Modifier l'avatar :</h2>
-    <img src="upload/{{ app.user.avatar }}" alt="avatar du {{ app.user.username }}">
+
     {{ form_start(form) }}
-    {% if form_errors is defined %}
-        <div class="alert alert-danger">
-            {{ form_errors(form) }}
-        </div>
-    {% endif %}
         {{ form_row(form) }}
         <button class="btn btn-primary">Envoyer</button>
     {{ form_end(form) }}
@@ -41,20 +35,6 @@
     <button type="submit" class="btn btn-primary">Modifier</button>
     </div>
     {{ form_end(formPass) }}
-=======
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <ul class=" list-group list-group-flush">
-            <li class="list-group-item list-group-item-primary">Avatar</li>
-            <li class="list-group-item list-group-item-primary">Mot de passe</li>
-            <li class="list-group-item list-group-item-primary">Email</li>
-        </ul>
-    </nav>
 
-    <p class="mt-lg-5">Modifier l'avatar :</p>
-    <form action="{{ path('user_avatar') }}" method="post" class="form-group">
-        <label for="avatar">Avatar : </label>
-        <input type="file" id="avatar" name="avatar" class="form-control">
-        <button class="btn btn-primary mt-lg-5">Envoyer</button>
-    </form>
->>>>>>> fa57747406fc63ff7a38592b9a2eb242ff2a788a
+
 {% endblock %}

@@ -1,11 +1,11 @@
 <?php
-
 namespace App\Controller;
 
 use App\Entity\Users;
-<<<<<<< HEAD
+
 use App\Repository\UsersRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Intervention\Image\ImageManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -16,16 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-=======
-use App\Entity\Datas;
-use App\Form\AvatarType;
-use App\Form\uploadType;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
->>>>>>> fa57747406fc63ff7a38592b9a2eb242ff2a788a
+
 
 /**
  * Class UserController
@@ -36,7 +27,7 @@ class UserController extends AbstractController
     /**
      * @Route("/user", name="user")
      */
-<<<<<<< HEAD
+
     public function index(EntityManagerInterface $entityManager, Request $request, UsersRepository $repository, UserPasswordEncoderInterface $encoder) : Response {
         $form = $this->createFormBuilder()
             ->add('avatar_img', FileType::class)
@@ -52,17 +43,35 @@ class UserController extends AbstractController
 
             $file = $form->get('avatar_img')->getData();
             $fileName = md5(uniqid()).'.'.$file->guessExtension();
-            $file->move($this->getParameter('upload_directory'), $fileName);
-
 
             // Move the file to the directory where brochures are stored
 
-            $user->setAvatar($fileName);
             /* on peut ajouter un avatar */
+
+
+
+            $file->move($this->getParameter('upload_directory'), $fileName);
+
+
+            $user->setAvatar($fileName);
+
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
+
+            // size img avatar
+
+            $manager = new ImageManager();
+            $image = $manager->make('upload/' .$fileName)->fit(40,40);
+            $image->save('upload/resize_' .$fileName);
+
+            $newNameImage = 'resize_'.$user->getAvatar();
+            $user->setAvatar($newNameImage);
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($user);
+            $entityManager->flush();
+
 
             return $this->redirectToRoute('home');
 
@@ -105,21 +114,5 @@ class UserController extends AbstractController
     }
 
 
-=======
-    public function index() {
 
-        return $this->render('user/index.html.twig', [
-            'controller_name' => 'UserController',
-        ]);
-
-    }
-
-    /**
-     * @Route("/user/avatar", name="user_avatar")
-     */
-    public function avatar(Request $request)
-    {
-        return $this->render('user/index.html.twig');
-    }
->>>>>>> fa57747406fc63ff7a38592b9a2eb242ff2a788a
 }
