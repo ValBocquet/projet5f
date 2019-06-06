@@ -47,8 +47,8 @@ a.tab.is-active, a.tab:hover {
     transition-duration: .15s;
     border: 2px solid #fff;
 }
-.drop {
-    border: 3px solid black;
+.uploadsForm {
+    border: 3px dashed black;
     height: 200px;
-    width: 50%;
+    padding: 20px;
 }
