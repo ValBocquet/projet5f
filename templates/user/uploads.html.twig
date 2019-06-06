@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1 class="mt-lg-4">Mes fichiers uploadés</h1>
+        <p class="mt-lg-4">Actuellement, vous utilisez {{ SizeAllUpload }}mo sur 100mo.</p>
+        <div class="list-group">
+                {% for myUpload in myUploads %}
+
+                   <p class="text-center mt-lg-4">
+                       <a href="upload/{{ myUpload.nameFile }}" class="list-group-item list-group-item-action list_upload">
+                           {{ myUpload.nameFile}} (le {{ myUpload.getCreateAt|date('d-m-Y') }})
+                       </a>
+                   </p>
+                {% endfor %}
+        </div>
+    {% block javascripts %}
+        <script type="text/javascript" src="js/script.js"></script> {# permet l'ajout de la class active au survol de la souris#}
+    {% endblock %}
+{% endblock %}

@@ -14,13 +14,16 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class HomeController extends AbstractController
 {
+
+
     /**
      * @Route("/", name="home")
      */
-    public function index(Request $request, UserInterface $user, UsersRepository $repository, ObjectManager $manager)
+    public function index(Request $request, TokenStorageInterface $storage, UsersRepository $repository, ObjectManager $manager)
     {
         // GESTION DE L'UPLOAD
 
@@ -29,7 +32,8 @@ class HomeController extends AbstractController
         $datas = new Datas();
 
         // je récupère l'id de l'user connecté
-        $userId = $this->getUser();
+        $userId = $storage->getToken()->getUser();
+
         $form = $this->createFormBuilder($datas)
             ->add('NameFile', FileType::class)
             ->getForm();
@@ -55,6 +59,35 @@ class HomeController extends AbstractController
 
         return $this->render('home/index.html.twig', [
             'form' => $form->createView()
+        ]);
+
+    }
+
+    /**
+     * @Route("user_files", name="userFiles")
+     */
+    public function displayFilesByUser(TokenStorageInterface $storage) {
+        $i = 0;
+        $countSize = 0;
+        $userId = $storage->getToken()->getUser();
+        $myUploads = $this->getDoctrine()
+            ->getRepository(Datas::class)
+            ->findBy(
+                ['idUser' => $userId]
+            );
+
+        for($i=0; $i<count($myUploads); $i++) {
+            $countSize = $countSize + $myUploads[$i]->getSizeFile();
+        }
+
+        $maxUploadSize = 100000;
+        $SizeAllUpload = $countSize / $maxUploadSize;
+        $SizeAllUpload = round($SizeAllUpload, 2);
+
+
+        return $this->render('user/uploads.html.twig', [
+            'myUploads' => $myUploads,
+            'SizeAllUpload' => $SizeAllUpload
         ]);
 
     }

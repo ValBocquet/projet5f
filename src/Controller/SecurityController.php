@@ -63,37 +63,6 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("uploads", name="uploads")
-     */
-    public function uploads(Request $request)
-    {
-        $datas = new Datas();
-        $form = $this->createForm(uploadType::class, $datas);
-
-        $form->handleRequest($request);
-
-       if ($form->isSubmitted() && $form->isValid()) {
-
-
-               $file = $datas->getNameFile();
-               $fileName = md5(uniqid()).'.'.$file->guessExtension();
-               $file->move($this->getParameter('upload_directory'), $fileName);
-
-
-               // Move the file to the directory where brochures are stored
-
-               $datas->setNameFile($fileName);
-
-               return $this->redirectToRoute('home');
-
-       }
-
-        return $this->render('upload.html.twig', [
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
      * @Route("deconnexion", name="logout")
      */
 
