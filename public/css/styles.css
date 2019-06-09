@@ -59,3 +59,7 @@ a.tab.is-active, a.tab:hover {
     text-align: center;
     padding: 40px;
 }
+.bin {
+    display: inline;
+    margin-right: 20px;
+}

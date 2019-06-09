@@ -2,7 +2,7 @@
 
 {% block body %}
     <h1 class="mt-lg-4">Mes fichiers uploadés</h1>
-        <p class="mt-lg-4">Actuellement, vous utilisez {{ SizeAllUpload }}mo sur 100mo.</p>
+        <p class="mt-lg-4">Actuellement, vous utilisez {{ sizeUpload }}mo sur 100mo.</p>
         <div class="list-group">
                 {% for myUpload in myUploads %}
 
@@ -10,6 +10,7 @@
                        <a href="upload/{{ myUpload.nameFile }}" class="list-group-item list-group-item-action list_upload">
                            {{ myUpload.nameFile}} (le {{ myUpload.getCreateAt|date('d-m-Y') }})
                        </a>
+                       <a href="{{ path("user_delete", {'id' : myUpload.id})}}"><i class="fas fa-trash bin"></i></a>
                    </p>
                 {% endfor %}
         </div>

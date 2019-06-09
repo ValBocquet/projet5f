@@ -57,6 +57,11 @@ class Users implements UserInterface
      */
     private $avatar;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $sizeUpload;
+
     public function __construct()
     {
         $this->files = new ArrayCollection();
@@ -176,6 +181,18 @@ class Users implements UserInterface
     public function setAvatar($avatar): self
     {
         $this->avatar = $avatar;
+
+        return $this;
+    }
+
+    public function getSizeUpload()
+    {
+        return $this->sizeUpload;
+    }
+
+    public function setSizeUpload($sizeUpload): self
+    {
+        $this->sizeUpload = $sizeUpload;
 
         return $this;
     }

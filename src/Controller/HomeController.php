@@ -7,7 +7,10 @@ use App\Entity\Users;
 use App\Form\UploadsFileType;
 use App\Repository\UsersRepository;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,6 +28,8 @@ class HomeController extends AbstractController
      */
     public function index(Request $request, TokenStorageInterface $storage, UsersRepository $repository, ObjectManager $manager)
     {
+        $user = $storage->getToken()->getUser();
+
         // GESTION DE L'UPLOAD
 
         // création de me formulaire
@@ -32,8 +37,8 @@ class HomeController extends AbstractController
         $datas = new Datas();
 
         // je récupère l'id de l'user connecté
-        $userId = $storage->getToken()->getUser();
 
+        $userId = $storage->getToken()->getUser();
         $form = $this->createFormBuilder($datas)
             ->add('NameFile', FileType::class)
             ->getForm();
@@ -51,6 +56,15 @@ class HomeController extends AbstractController
             $datas->setSizeFile(filesize('upload/'.$fileName));
             $datas->setCreateAt(new \DateTime());
 
+            if($userId->getSizeUpload() != null) {
+                $userId->setSizeUpload($userId->getSizeUpload() + filesize('upload/'.$fileName));
+            }
+            else {
+                $userId->setSizeUpload(filesize('upload/'.$fileName));
+            }
+
+
+            $manager->persist($userId);
             $manager->persist($datas);
             $manager->flush();
         }
@@ -76,7 +90,7 @@ class HomeController extends AbstractController
                 ['idUser' => $userId]
             );
 
-        for($i=0; $i<count($myUploads); $i++) {
+        /*for($i=0; $i<count($myUploads); $i++) {
             $countSize = $countSize + $myUploads[$i]->getSizeFile();
         }
 
@@ -84,11 +98,60 @@ class HomeController extends AbstractController
         $SizeAllUpload = $countSize / $maxUploadSize;
         $SizeAllUpload = round($SizeAllUpload, 2);
 
+*/
+        $sizeUpload = $userId->getSizeUpload() / 1000000;
+        $sizeUpload = substr($sizeUpload, 0, 3);
 
         return $this->render('user/uploads.html.twig', [
             'myUploads' => $myUploads,
-            'SizeAllUpload' => $SizeAllUpload
+            'sizeUpload' => $sizeUpload
         ]);
+
+
+
+    }
+
+    /**
+     * @Route("user_delete/{id}", name="user_delete")
+     */
+    public function deleteFile($id, EntityManagerInterface $manager) {
+        $user = $this->getUser();
+
+        // je récupère les informations du fichier à supprimer
+        $repository = $this->getDoctrine()->getRepository(Datas::class);
+        $fileToDelete = $repository->find($id);
+
+        // je soustrais le poids du fichier à supprimer dans la table user
+
+
+        $repositoryUser = $this->getDoctrine()->getRepository(Users::class);
+        $totalSizeUser = $repositoryUser->findOneBy(
+            ['sizeUpload' => $user->getSizeUpload()]
+        );
+
+        $newSizeUser = $totalSizeUser->getSizeUpload() - $fileToDelete->getSizeFile();
+
+        if ($newSizeUser < 0) {
+            $newSizeUser = 0;
+        }
+
+        $sizeFinal = $user->setSizeUpload($newSizeUser);
+
+        $manager->persist($sizeFinal);
+        $manager->flush();
+
+
+        // je supprime le fichier du server
+
+        $fileSystem = new Filesystem();
+        $fileSystem->remove('upload/'.$fileToDelete->getNameFile());
+
+        // je supprime le fichier en db
+
+        $manager->remove($fileToDelete);
+        $manager->flush();
+
+        return $this->redirectToRoute('home');
 
     }
 }
