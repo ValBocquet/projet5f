@@ -13,7 +13,7 @@ class Datas
 {
     /**
      * @Assert\File(
-     *     maxSize = "2M",
+     *     maxSize = "50M",
      *     maxSizeMessage = "Votre fichier ({{ size }} {{ suffix }}) dépasse la limite autorisée de {{ limit }} {{ suffix }}."
      * )
      */

@@ -48,25 +48,50 @@ class HomeController extends AbstractController
         if($form->isSubmitted() &&$form->isValid()) {
             $myFile = $form->get('NameFile')->getData();
 
-            $fileName = md5(uniqid()).'.'.$myFile->guessExtension();
-            $myFile->move($this->getParameter('upload_directory'), $fileName);
 
-            $datas->setNameFile($fileName);
-            $datas->setIdUser($userId);
-            $datas->setSizeFile(filesize('upload/'.$fileName));
-            $datas->setCreateAt(new \DateTime());
 
-            if($userId->getSizeUpload() != null) {
-                $userId->setSizeUpload($userId->getSizeUpload() + filesize('upload/'.$fileName));
+            // récupération en db de la taille pour l'user actuel
+            // ensuite on vérifie si la taille actuelle + taille du fichier <=100 mo
+
+            $repositoryUser = $this->getDoctrine()->getRepository(Users::class);
+            $totalSizeUser = $repositoryUser->findOneBy(
+                ['sizeUpload' => $user->getSizeUpload()]
+            );
+
+            // $totalSizeUser->getSizeUpload() --> taille total actuelle
+
+            // $myFile->getSize()); taille du fichier en cours d'upload
+
+            if(($totalSizeUser->getSizeUpload() + $myFile->getSize()) > 1000000) {
+                // impossible d'uploader et redirection
+                return $this->redirectToRoute('home');
+
+            } else {
+                // je peux uploader car ça ne dépasse pas les 100 mo
+                $fileName = md5(uniqid()).'.'.$myFile->guessExtension();
+                $myFile->move($this->getParameter('upload_directory'), $fileName);
+
+                $datas->setNameFile($fileName);
+                $datas->setIdUser($userId);
+                $datas->setSizeFile(filesize('upload/'.$fileName));
+                $datas->setCreateAt(new \DateTime());
+
+                if($userId->getSizeUpload() != null) {
+                    $userId->setSizeUpload($userId->getSizeUpload() + filesize('upload/'.$fileName));
+                }
+                else {
+                    $userId->setSizeUpload(filesize('upload/'.$fileName));
+                }
+
+
+                $manager->persist($userId);
+                $manager->persist($datas);
+                $manager->flush();
             }
-            else {
-                $userId->setSizeUpload(filesize('upload/'.$fileName));
-            }
 
 
-            $manager->persist($userId);
-            $manager->persist($datas);
-            $manager->flush();
+
+
         }
 
 
