@@ -63,3 +63,10 @@ a.tab.is-active, a.tab:hover {
     display: inline;
     margin-right: 20px;
 }
+
+label[for=form_avatar_img], .avatar_form label, .uploadsForm label {
+    display: none;
+}
+#username {
+    font-style: italic;
+}
