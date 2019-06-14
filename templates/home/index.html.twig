@@ -11,6 +11,12 @@
 
     <div class="bs-docs-section clearfix">
 
+        {% if message is defined %}
+            <div class="alert {{ etat }}">
+                {{ message }}
+            </div>
+        {% endif %}
+
             {% if app.user.username is defined %}
                 <div class="uploadsForm mt-lg-4">
 

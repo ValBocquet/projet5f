@@ -30,6 +30,7 @@ class HomeController extends AbstractController
     {
         $user = $storage->getToken()->getUser();
 
+
         // GESTION DE L'UPLOAD
 
         // création de me formulaire
@@ -37,6 +38,9 @@ class HomeController extends AbstractController
         $datas = new Datas();
 
         // je récupère l'id de l'user connecté
+
+        $message = "";
+        $etat = "";
 
         $userId = $storage->getToken()->getUser();
         $form = $this->createFormBuilder($datas)
@@ -47,7 +51,6 @@ class HomeController extends AbstractController
 
         if($form->isSubmitted() &&$form->isValid()) {
             $myFile = $form->get('NameFile')->getData();
-
 
 
             // récupération en db de la taille pour l'user actuel
@@ -64,40 +67,53 @@ class HomeController extends AbstractController
 
             if(($totalSizeUser->getSizeUpload() + $myFile->getSize()) > 1000000) {
                 // impossible d'uploader et redirection
-                return $this->redirectToRoute('home');
+                $message = "Vous dépassez les 100 mo autorisés. ";
+                $etat = 'alert-danger';
 
             } else {
                 // je peux uploader car ça ne dépasse pas les 100 mo
-                $fileName = md5(uniqid()).'.'.$myFile->guessExtension();
-                $myFile->move($this->getParameter('upload_directory'), $fileName);
+                // $fileName = md5(uniqid()).'.'.$myFile->guessExtension();
 
-                $datas->setNameFile($fileName);
-                $datas->setIdUser($userId);
-                $datas->setSizeFile(filesize('upload/'.$fileName));
-                $datas->setCreateAt(new \DateTime());
+                if(!preg_match('/^[a-zA-Z]+[a-zA-Z0-9._-]+$/', $myFile->getClientOriginalName())) {
+                    $message = "Le nom du fichier ne doit pas contenir de caractères spéciaux.";
+                    $etat = "alert-warning";
+                } else {
+                    $fileName = time() . '_' . $myFile->getClientOriginalName();
 
-                if($userId->getSizeUpload() != null) {
-                    $userId->setSizeUpload($userId->getSizeUpload() + filesize('upload/'.$fileName));
+                    // $fileName = $myFile->getClientOriginalName().'_'. time(). $myFile->guessExtension();
+
+                    $myFile->move($this->getParameter('upload_directory'), $fileName);
+
+                    $datas->setNameFile($fileName);
+                    $datas->setIdUser($userId);
+                    $datas->setSizeFile(filesize('upload/'.$fileName));
+                    $datas->setCreateAt(new \DateTime());
+
+                    if($userId->getSizeUpload() != null) {
+                        $userId->setSizeUpload($userId->getSizeUpload() + filesize('upload/'.$fileName));
+                    }
+                    else {
+                        $userId->setSizeUpload(filesize('upload/'.$fileName));
+                    }
+
+                    // $message = "Fichier bien uploadé ! ";
+                    $etat = 'alert-success';
+
+                    $manager->persist($userId);
+                    $manager->persist($datas);
+                    $manager->flush();
                 }
-                else {
-                    $userId->setSizeUpload(filesize('upload/'.$fileName));
-                }
 
-
-                $manager->persist($userId);
-                $manager->persist($datas);
-                $manager->flush();
             }
-
-
-
 
         }
 
 
 
         return $this->render('home/index.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'message' => $message,
+            'etat' => $etat
         ]);
 
     }
@@ -112,7 +128,8 @@ class HomeController extends AbstractController
         $myUploads = $this->getDoctrine()
             ->getRepository(Datas::class)
             ->findBy(
-                ['idUser' => $userId]
+                ['idUser' => $userId],
+                ['create_at' => 'DESC']
             );
 
         /*for($i=0; $i<count($myUploads); $i++) {
