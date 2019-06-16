@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Datas;
+use App\Entity\Users;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -19,32 +20,16 @@ class DatasRepository extends ServiceEntityRepository
         parent::__construct($registry, Datas::class);
     }
 
-    // /**
-    //  * @return Datas[] Returns an array of Datas objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('d.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+    public function findAllVisibleQuery(Users $userId) {
 
-    /*
-    public function findOneBySomeField($value): ?Datas
-    {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
+        return $this->createQueryBuilder('p')
+            ->where('p.idUser = :idUser')
+            ->orderBy('p.create_at', 'DESC')
+            ->setParameter('idUser', $userId)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getResult();
+
     }
-    */
+
+
 }

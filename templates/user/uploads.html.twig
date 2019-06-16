@@ -14,6 +14,9 @@
                    </p>
                 {% endfor %}
         </div>
+    <div class="pagination page">
+        {{ knp_pagination_render(myUploads) }}
+    </div>
     {% block javascripts %}
         <script type="text/javascript" src="js/script.js"></script> {# permet l'ajout de la class active au survol de la souris#}
     {% endblock %}

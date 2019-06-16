@@ -70,3 +70,7 @@ label[for=form_avatar_img], .avatar_form label, .uploadsForm label {
 #username {
     font-style: italic;
 }
+.page {
+    margin: auto;
+    width: 300px;
+}

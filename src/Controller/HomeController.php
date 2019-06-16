@@ -6,14 +6,17 @@ use App\Entity\Datas;
 use App\Entity\Users;
 use App\Form\UploadsFileType;
 use App\Repository\UsersRepository;
+use App\Repository\DatasRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -121,26 +124,24 @@ class HomeController extends AbstractController
     /**
      * @Route("user_files", name="userFiles")
      */
-    public function displayFilesByUser(TokenStorageInterface $storage) {
-        $i = 0;
-        $countSize = 0;
+    public function displayFilesByUser(TokenStorageInterface $storage, PaginatorInterface $paginator, Request $request, DatasRepository $repository) {
+
+        $this->repository = $repository;
         $userId = $storage->getToken()->getUser();
-        $myUploads = $this->getDoctrine()
+
+      /*  $myUploads = $this->getDoctrine()
             ->getRepository(Datas::class)
             ->findBy(
                 ['idUser' => $userId],
                 ['create_at' => 'DESC']
-            );
+            );*/
 
-        /*for($i=0; $i<count($myUploads); $i++) {
-            $countSize = $countSize + $myUploads[$i]->getSizeFile();
-        }
+        $myUploads = $paginator->paginate(
+          $this->repository->findAllVisibleQuery($userId),
+          $request->query->getInt('page', 1),
+          5
+        );
 
-        $maxUploadSize = 100000;
-        $SizeAllUpload = $countSize / $maxUploadSize;
-        $SizeAllUpload = round($SizeAllUpload, 2);
-
-*/
         $sizeUpload = $userId->getSizeUpload() / 1000000;
         $sizeUpload = substr($sizeUpload, 0, 3);
 
