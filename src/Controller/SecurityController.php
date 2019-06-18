@@ -23,6 +23,7 @@ class SecurityController extends AbstractController
     {
         $user = new Users();
 
+
         $form = $this->createFormBuilder($user)
             ->add('pseudo')
             ->add('password', PasswordType::class)

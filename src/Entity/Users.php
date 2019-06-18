@@ -62,6 +62,11 @@ class Users implements UserInterface
      */
     private $sizeUpload;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $premium;
+
     public function __construct()
     {
         $this->files = new ArrayCollection();
@@ -193,6 +198,18 @@ class Users implements UserInterface
     public function setSizeUpload($sizeUpload): self
     {
         $this->sizeUpload = $sizeUpload;
+
+        return $this;
+    }
+
+    public function getPremium(): ?bool
+    {
+        return $this->premium;
+    }
+
+    public function setPremium(bool $premium): self
+    {
+        $this->premium = $premium;
 
         return $this;
     }

@@ -74,3 +74,10 @@ label[for=form_avatar_img], .avatar_form label, .uploadsForm label {
     margin: auto;
     width: 300px;
 }
+.preniumList {
+    padding-left: 0;
+    text-align: center;
+}
+.btn_prenium {
+    width: 100%;
+}

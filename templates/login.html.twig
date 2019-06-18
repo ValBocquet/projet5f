@@ -7,7 +7,7 @@
     <div class="page-header jumbotron text-center" id="banner" >
         <h1>Se connecter sur le site</h1>
 
-        {% if error %}
+        {% if error.messageKey is defined %}
             <div class="alert alert-danger">
                 {{ error.messageKey | trans(error.messagedata, 'security') }}
             </div>
@@ -15,7 +15,7 @@
 
         <form action="{{ path('login') }}" method="post">
             <div class="form-group">
-                <input type="text" class="form-control" placeholder="Adresse email" required name="_username" value="{{ last_username }}">
+                <input type="text" class="form-control" placeholder="Adresse email" required name="_username" value="{% if last_username is defined %}{{ last_username }}{% endif %}">
             </div>
             <div class="form-group">
                 <input type="password" class="form-control" placeholder="Password" required name="_password">

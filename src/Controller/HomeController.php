@@ -44,9 +44,10 @@ class HomeController extends AbstractController
 
         $message = "";
         $etat = "";
+        $limiteSize = 1000000;
 
         $userId = $storage->getToken()->getUser();
-        $form = $this->createFormBuilder($datas)
+        $form = $this->createFormBuilder($datas, array('attr' => array('class' => 'form')))
             ->add('NameFile', FileType::class)
             ->getForm();
 
@@ -68,7 +69,11 @@ class HomeController extends AbstractController
 
             // $myFile->getSize()); taille du fichier en cours d'upload
 
-            if(($totalSizeUser->getSizeUpload() + $myFile->getSize()) > 1000000) {
+            if($userId->getPremium()) {
+                $limiteSize = 10000000;
+            }
+
+            if(($totalSizeUser->getSizeUpload() + $myFile->getSize()) > $limiteSize) {
                 // impossible d'uploader et redirection
                 $message = "Vous dépassez les 100 mo autorisés. ";
                 $etat = 'alert-danger';
@@ -129,26 +134,26 @@ class HomeController extends AbstractController
         $this->repository = $repository;
         $userId = $storage->getToken()->getUser();
 
-      /*  $myUploads = $this->getDoctrine()
-            ->getRepository(Datas::class)
-            ->findBy(
-                ['idUser' => $userId],
-                ['create_at' => 'DESC']
-            );*/
+        if ($userId === "anon.") {
+            return $this->render('login.html.twig');
+        } else {
+            $myUploads = $paginator->paginate(
+                $this->repository->findAllVisibleQuery($userId),
+                $request->query->getInt('page', 1),
+                5
+            );
 
-        $myUploads = $paginator->paginate(
-          $this->repository->findAllVisibleQuery($userId),
-          $request->query->getInt('page', 1),
-          5
-        );
+            $sizeUpload = $userId->getSizeUpload() / 1000000; // permet de diviser pour afficher en mo (o --> mo)
+            $sizeUpload = substr($sizeUpload, 0, 3);
 
-        $sizeUpload = $userId->getSizeUpload() / 1000000;
-        $sizeUpload = substr($sizeUpload, 0, 3);
+            return $this->render('user/uploads.html.twig', [
+                'myUploads' => $myUploads,
+                'sizeUpload' => $sizeUpload,
+                'premium' => $userId->getPremium()
 
-        return $this->render('user/uploads.html.twig', [
-            'myUploads' => $myUploads,
-            'sizeUpload' => $sizeUpload
-        ]);
+            ]);
+        }
+
 
 
 
