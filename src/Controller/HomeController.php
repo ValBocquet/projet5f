@@ -104,7 +104,7 @@ class HomeController extends AbstractController
                         $userId->setSizeUpload(filesize('upload/'.$fileName));
                     }
 
-                    // $message = "Fichier bien uploadé ! ";
+                    $message = "Fichier bien uploadé ! ";
                     $etat = 'alert-success';
 
                     $manager->persist($userId);
@@ -144,7 +144,10 @@ class HomeController extends AbstractController
             );
 
             $sizeUpload = $userId->getSizeUpload() / 1000000; // permet de diviser pour afficher en mo (o --> mo)
+
             $sizeUpload = substr($sizeUpload, 0, 3);
+
+
 
             return $this->render('user/uploads.html.twig', [
                 'myUploads' => $myUploads,

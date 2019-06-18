@@ -67,6 +67,7 @@ class Users implements UserInterface
      */
     private $premium;
 
+
     public function __construct()
     {
         $this->files = new ArrayCollection();
@@ -212,5 +213,23 @@ class Users implements UserInterface
         $this->premium = $premium;
 
         return $this;
+    }
+
+    public function getRole(): ?array
+    {
+        return $this->role;
+    }
+
+    public function setRole(array $role): self
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        // TODO: Implement __toString() method.
+        return $this->getEmail();
     }
 }
