@@ -33,7 +33,6 @@ class HomeController extends AbstractController
     {
         $user = $storage->getToken()->getUser();
 
-
         // GESTION DE L'UPLOAD
 
         // création de me formulaire

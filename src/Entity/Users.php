@@ -67,6 +67,11 @@ class Users implements UserInterface
      */
     private $premium;
 
+    /**
+     * @ORM\Column(type="json_array")
+     */
+    private $role;
+
 
     public function __construct()
     {
@@ -217,7 +222,9 @@ class Users implements UserInterface
 
     public function getRole(): ?array
     {
-        return $this->role;
+        $role = $this->role;
+        $role[] = 'ROLE_USER';
+        return array_unique($role);
     }
 
     public function setRole(array $role): self
@@ -230,6 +237,6 @@ class Users implements UserInterface
     public function __toString()
     {
         // TODO: Implement __toString() method.
-        return $this->getEmail();
+        return $this->getPseudo();
     }
 }

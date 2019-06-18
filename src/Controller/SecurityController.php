@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
@@ -19,8 +20,12 @@ class SecurityController extends AbstractController
     /**
      * @Route("register", name="register")
      */
-    public function register(Request $request, ObjectManager $manager, UserPasswordEncoderInterface $encoder)
+    public function register(Request $request, ObjectManager $manager, UserPasswordEncoderInterface $encoder, TokenStorageInterface $storage)
     {
+
+        if (!empty($this->getUser())) {
+            return $this->redirectToRoute('home');
+        }
         $user = new Users();
 
 
