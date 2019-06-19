@@ -33,6 +33,8 @@ class HomeController extends AbstractController
     {
         $user = $storage->getToken()->getUser();
 
+
+
         // GESTION DE L'UPLOAD
 
         // création de me formulaire
@@ -120,7 +122,7 @@ class HomeController extends AbstractController
         return $this->render('home/index.html.twig', [
             'form' => $form->createView(),
             'message' => $message,
-            'etat' => $etat
+            'etat' => $etat,
         ]);
 
     }

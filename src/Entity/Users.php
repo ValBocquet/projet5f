@@ -68,9 +68,9 @@ class Users implements UserInterface
     private $premium;
 
     /**
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="boolean")
      */
-    private $role;
+    private $is_admin;
 
 
     public function __construct()
@@ -149,8 +149,13 @@ class Users implements UserInterface
 
     public function getRoles()
     {
-        // TODO: Implement getRoles() method.
-        return ['ROLE_USER'];
+        // TODO: Implement getRoles() method.{
+        $roles = ['ROLE_USER'];
+         if ($this->is_admin) {
+             $roles[] = 'ROLE_ADMIN';
+         }
+        return $roles;
+
     }
 
     /**
@@ -220,23 +225,21 @@ class Users implements UserInterface
         return $this;
     }
 
-    public function getRole(): ?array
-    {
-        $role = $this->role;
-        $role[] = 'ROLE_USER';
-        return array_unique($role);
-    }
-
-    public function setRole(array $role): self
-    {
-        $this->role = $role;
-
-        return $this;
-    }
-
     public function __toString()
     {
         // TODO: Implement __toString() method.
         return $this->getPseudo();
+    }
+
+    public function getIsAdmin(): ?bool
+    {
+        return $this->is_admin;
+    }
+
+    public function setIsAdmin(bool $is_admin): self
+    {
+        $this->is_admin = $is_admin;
+
+        return $this;
     }
 }
