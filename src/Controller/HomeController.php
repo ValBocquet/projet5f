@@ -55,7 +55,12 @@ class HomeController extends AbstractController
         $form->handleRequest($request);
 
         if($form->isSubmitted() &&$form->isValid()) {
+
+
+
             $myFile = $form->get('NameFile')->getData();
+
+
 
 
             // récupération en db de la taille pour l'user actuel
@@ -122,7 +127,7 @@ class HomeController extends AbstractController
         return $this->render('home/index.html.twig', [
             'form' => $form->createView(),
             'message' => $message,
-            'etat' => $etat,
+            'etat' => $etat
         ]);
 
     }
@@ -202,6 +207,9 @@ class HomeController extends AbstractController
 
         $manager->remove($fileToDelete);
         $manager->flush();
+
+        $message = "Fichier supprimé avec succès du serveur";
+        $etat = "alert-success";
 
         return $this->redirectToRoute('home');
 

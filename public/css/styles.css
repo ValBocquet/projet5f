@@ -48,8 +48,7 @@ a.tab.is-active, a.tab:hover {
     border: 2px solid #fff;
 }
 .uploadsForm {
-    outline: 3px dashed black;
-    outline-offset: -10px;
+    /* outline: 3px dashed black; */
     height: 200px;
     padding: 20px;
 }
@@ -59,6 +58,7 @@ a.tab.is-active, a.tab:hover {
     display: inline-block;
     text-align: center;
     padding: 40px;
+    border: 2px solid black;
 }
 .bin {
     display: inline;
@@ -84,7 +84,7 @@ label[for=form_avatar_img], .avatar_form label, .uploadsForm label {
 }
 
 .container-body {
-    background-image: url("images/background.png");
+    /*background-image: url("images/background.png");*/
     border-radius: 10px;
     box-shadow: 0 0 0 200px rgba(255,255,255,0.3) inset;
     margin-bottom: 60px;
@@ -102,4 +102,8 @@ label[for=form_avatar_img], .avatar_form label, .uploadsForm label {
     background-color: #f5f5f5;
     border-top: 3px solid #ececec;
     text-align: center;
+}
+
+.box__success, .box__uploading, .box__error {
+    display: none;
 }

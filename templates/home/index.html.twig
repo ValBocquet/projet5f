@@ -3,14 +3,13 @@
 {% block title %}
     Site de partage et d'upload
 {% endblock %}
-{% block stylesheets %}
-    <link rel="stylesheet" href="css/dropzone.css">
-{% endblock %}
+
 
 
 {% block body %}
     <div class="page-header" id="banner">
         <h1 class="mt-lg-5">Bienvenue sur le site</h1>
+        <p class="mt-lg-5">Vous pouvez glisser déposer vos fichiers.</p>
     </div>
 
     <div class="bs-docs-section clearfix">
@@ -21,13 +20,14 @@
             </div>
         {% endif %}
 
+
             {% if app.user.username is defined %}
                 <div class="uploadsForm mt-lg-4">
                         {{ form_start(form) }}
-                            {{ form_widget(form) }}
-                            <button class="btn btn-primary" type="submit">Envoyer</button>
+                        {{ form_widget(form) }}
+                        <button class="btn btn-primary" type="submit">Envoyer</button>
                         {{ form_end(form) }}
-        </div>
+                </div>
         <p class="mt-lg-4 text-center"><a href="{{ path('userFiles') }}">Voir tous mes uploads</a></p>
             {% else %}
         <div class="uploadsForm mt-lg-4" >

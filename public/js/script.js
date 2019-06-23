@@ -1,36 +1,20 @@
-$(document).on('dragenter', '.uploadsForm', function() {
-    $(this).css('border', '3px dashed red');
-    return false;
-});
+let form = document.querySelector('.form');
 
-$(document).on('dragover', '.uploadsForm', function(e){
+form.addEventListener('drop', function (e) {
     e.preventDefault();
-    e.stopPropagation();
-    $(this).css('outlet', '3px dashed red');
-    return false;
+    form.style.borderStyle = 'solid';
+    form_NameFile.files = e.dataTransfer.files;
 });
 
-$(document).on('dragleave', '.uploadsForm', function(e) {
+form.addEventListener('dragover', function (e) {
     e.preventDefault();
-    e.stopPropagation();
-    $(this).css('border', '3px dashed #BBBBBB');
-    return false;
 });
 
-$(document).on('drop', '.uploadsForm', function(e) {
-    if(e.originalEvent.dataTransfer){
-        if(e.originalEvent.dataTransfer.files.length) {
-            // Stop the propagation of the event
-            e.preventDefault();
-            e.stopPropagation();
-            $(this).css('border', '3px dashed green')
-            // Main function to upload
-            document.querySelector('#form_NameFile').classList.add('coucou')
-        }
-    }
-    else {
-        $(this).css('border', '3px dashed #BBBBBB');
-    }
-    return false;
+
+form.addEventListener('dragenter', function () {
+    form.style.borderStyle = 'dashed';
+});
+form.addEventListener('dragleave', function () {
+    form.style.borderStyle = 'solid';
 });
 
