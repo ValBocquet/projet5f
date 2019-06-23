@@ -71,7 +71,7 @@ class HomeController extends AbstractController
             // $myFile->getSize()); taille du fichier en cours d'upload
 
             if($userId->getPremium()) {
-                $limiteSize = 10000000;
+                $limiteSize = 100000000;
             }
 
             if(($totalSizeUser->getSizeUpload() + $myFile->getSize()) > $limiteSize) {

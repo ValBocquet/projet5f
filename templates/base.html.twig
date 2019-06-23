@@ -21,7 +21,11 @@
                 <ul class="navbar-nav">
 
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('premium') }}">Prenium</a>
+                        {% if app.user.premium is defined %}
+                            <a class="nav-link" hidden>Abonné</a>
+                        {% else %}
+                            <a class="nav-link" href="{{ path('premium') }}">Prenium</a>
+                        {% endif %}
                     </li>
 
                 </ul>
@@ -51,9 +55,15 @@
             </div>
         </div>
     </div>
-    <div class="container">
+    <div class="container container-body">
         {% block body %}{% endblock %}
     </div>
+    <footer class="footer">
+        <div class="container">
+            <span class="text-muted"> Conçu et développé par Valentin Bocquet</span>
+
+        </div>
+    </footer>
         {% block javascripts %}{% endblock %}
     </body>
 </html>
