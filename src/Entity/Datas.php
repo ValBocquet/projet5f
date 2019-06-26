@@ -12,12 +12,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Datas
 {
     /**
-     * @Assert\File(
-     *     maxSize = "5M",
-     *     maxSizeMessage = "Votre fichier ({{ size }} {{ suffix }}) dépasse la limite autorisée de {{ limit }} {{ suffix }}."
-     * )
-     */
-    /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")

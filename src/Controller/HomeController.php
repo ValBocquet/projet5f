@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -32,7 +33,6 @@ class HomeController extends AbstractController
     public function index(Request $request, TokenStorageInterface $storage, UsersRepository $repository, ObjectManager $manager)
     {
         $user = $storage->getToken()->getUser();
-
 
 
         // GESTION DE L'UPLOAD
@@ -54,73 +54,77 @@ class HomeController extends AbstractController
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted() &&$form->isValid()) {
-
+        if ($form->isSubmitted() && $form->isValid()) {
 
 
             $myFile = $form->get('NameFile')->getData();
 
+            if ($myFile->getSize() <= 10000000) {
 
 
+                // récupération en db de la taille pour l'user actuel
+                // ensuite on vérifie si la taille actuelle + taille du fichier <=100 mo
 
-            // récupération en db de la taille pour l'user actuel
-            // ensuite on vérifie si la taille actuelle + taille du fichier <=100 mo
+                $repositoryUser = $this->getDoctrine()->getRepository(Users::class);
+                $totalSizeUser = $repositoryUser->findOneBy(
+                    ['sizeUpload' => $user->getSizeUpload()]
+                );
 
-            $repositoryUser = $this->getDoctrine()->getRepository(Users::class);
-            $totalSizeUser = $repositoryUser->findOneBy(
-                ['sizeUpload' => $user->getSizeUpload()]
-            );
+                // $totalSizeUser->getSizeUpload() --> taille total actuelle
 
-            // $totalSizeUser->getSizeUpload() --> taille total actuelle
+                // $myFile->getSize()); taille du fichier en cours d'upload
 
-            // $myFile->getSize()); taille du fichier en cours d'upload
+                if ($userId->getPremium()) {
+                    $limiteSize = 100000000;
+                }
 
-            if($userId->getPremium()) {
-                $limiteSize = 100000000;
-            }
+                if (($totalSizeUser->getSizeUpload() + $myFile->getSize()) > $limiteSize) {
+                    // impossible d'uploader et redirection
+                    $message = "Vous dépassez les 100 mo autorisés. ";
+                    $etat = 'alert-danger';
 
-            if(($totalSizeUser->getSizeUpload() + $myFile->getSize()) > $limiteSize) {
-                // impossible d'uploader et redirection
-                $message = "Vous dépassez les 100 mo autorisés. ";
-                $etat = 'alert-danger';
-
-            } else {
-                // je peux uploader car ça ne dépasse pas les 100 mo
-                // $fileName = md5(uniqid()).'.'.$myFile->guessExtension();
-
-                if(!preg_match('/^[a-zA-Z]+[a-zA-Z0-9._-]+$/', $myFile->getClientOriginalName())) {
-                    $message = "Le nom du fichier ne doit pas contenir de caractères spéciaux.";
-                    $etat = "alert-warning";
                 } else {
-                    $fileName = time() . '_' . $myFile->getClientOriginalName();
+                    // je peux uploader car ça ne dépasse pas les 100 mo
+                    // $fileName = md5(uniqid()).'.'.$myFile->guessExtension();
 
-                    // $fileName = $myFile->getClientOriginalName().'_'. time(). $myFile->guessExtension();
+                    if (!preg_match('/^[a-zA-Z]+[a-zA-Z0-9._-]+$/', $myFile->getClientOriginalName())) {
+                        $message = "Le nom du fichier ne doit pas contenir de caractères spéciaux.";
+                        $etat = "alert-warning";
+                    } else {
+                        $fileName = time() . '_' . $myFile->getClientOriginalName();
 
-                    $myFile->move($this->getParameter('upload_directory'), $fileName);
+                        // $fileName = $myFile->getClientOriginalName().'_'. time(). $myFile->guessExtension();
 
-                    $datas->setNameFile($fileName);
-                    $datas->setIdUser($userId);
-                    $datas->setSizeFile(filesize('upload/'.$fileName));
-                    $datas->setCreateAt(new \DateTime());
+                        $myFile->move($this->getParameter('upload_directory'), $fileName);
 
-                    if($userId->getSizeUpload() != null) {
-                        $userId->setSizeUpload($userId->getSizeUpload() + filesize('upload/'.$fileName));
+                        $datas->setNameFile($fileName);
+                        $datas->setIdUser($userId);
+                        $datas->setSizeFile(filesize('upload/' . $fileName));
+                        $datas->setCreateAt(new \DateTime());
+
+                        if ($userId->getSizeUpload() != null) {
+                            $userId->setSizeUpload($userId->getSizeUpload() + filesize('upload/' . $fileName));
+                        } else {
+                            $userId->setSizeUpload(filesize('upload/' . $fileName));
+                        }
+
+                        $message = "Fichier bien uploadé ! ";
+                        $etat = 'alert-success';
+
+                        $manager->persist($userId);
+                        $manager->persist($datas);
+                        $manager->flush();
                     }
-                    else {
-                        $userId->setSizeUpload(filesize('upload/'.$fileName));
-                    }
 
-                    $message = "Fichier bien uploadé ! ";
-                    $etat = 'alert-success';
-
-                    $manager->persist($userId);
-                    $manager->persist($datas);
-                    $manager->flush();
                 }
 
             }
-
+            else {
+                $etat = "alert-danger";
+                $message = "La taille du fichier ne doit pas dépasser 10 Mo.";
+            }
         }
+
 
 
 
